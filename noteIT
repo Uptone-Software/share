@@ -1,0 +1,69 @@
+#####################################################################################################################################################
+#								noteIT
+#								Uptone Software
+#####################################################################################################################################################
+# 	This program was created by Steven J. Core. We thank you for using Uptone Software. 
+#
+#####################################################################################################################################################
+
+
+
+import wx
+import threading
+import os
+
+##################
+
+file 							= open('noteIT.txt', "r")
+fileData 						= file.read()
+file.close()
+
+#### MAIN GUI
+class mainUI(wx.Frame):
+	def __init__(self):
+		wx.Frame.__init__( self, None, title="noteIT - Uptone Software", style=wx.NO_BORDER )
+		
+		global uiWidth
+		global uiHeight
+
+		##############
+		uiWidth, uiHeight 		= wx.DisplaySize()
+		
+		uiX 					= uiWidth - uiWidth / 3 + 20
+		uiY						= 0
+		uiWidth 				= uiWidth / 3
+		uiHeight 				= uiHeight / 4
+		###############
+
+		#############################
+		self.txtCtrl			= wx.TextCtrl(self, -1, style=wx.BORDER_NONE | wx.TE_MULTILINE |  wx.TE_RICH2, size=(40, 40), pos=(20,20),  )
+		font1 = wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+		self.txtCtrl.SetFont(font1)
+		self.txtCtrl.SetBackgroundColour('#000000')
+		self.txtCtrl.SetForegroundColour('#FFFFFF')
+		self.txtCtrl.AppendText(fileData)
+		#############################
+
+
+		self.SetClientSize((uiWidth,uiHeight))
+		self.Move((uiX, uiY))
+		self.SetTransparent( 200)
+		self.SetBackgroundColour('#000000')
+		pannel 					= wx.Panel( self)
+#####################################################################
+
+
+def update():
+	myData 							= frame.txtCtrl.GetValue()
+	file 							= open('noteIT.txt', "w")
+	file.write( myData)
+	file.close()
+
+	threading.Timer(0.10, update).start()
+
+
+myApp 			= wx.App( False)
+frame 			= mainUI()
+frame.Show()
+threading.Timer(0.10, update).start()
+myApp.MainLoop()
